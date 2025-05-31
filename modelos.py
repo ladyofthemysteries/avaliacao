@@ -9,7 +9,7 @@ class UsuarioBase(BaseModel):
   senha: str
 
 class Usuario(UsuarioBase):
-  id: int |  None = None
+  id: int 
 
 # TOKEN
 class SignUp(UsuarioBase):
@@ -22,12 +22,12 @@ class SignIn(BaseModel):
 # TAREFA
 class TarefaBase(BaseModel):
   titulo: str
-  descricao: str | None = None
-  concluida: bool = False
+  descricao: Optional[str] = None
+  concluida: Optional[bool] = False
 
 class Tarefa(TarefaBase):
-  id: int | None = None
-  usuario_id: int | None = None
+  id: int
+  usuario_id: int 
 
 
 class TarefaCreate(TarefaBase):
