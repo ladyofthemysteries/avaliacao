@@ -16,7 +16,7 @@ def hash_password(senha: str):
 def verify_hash_password(senha: str, hash_password: str):
   return pwd_context.verify(senha, hash_password)
 
-SECRET_KEY = "laisa"
+SECRET_KEY = "laisA127"
 ALGORITHM = "HS256"
 
 def create_jwt_token(email: str):

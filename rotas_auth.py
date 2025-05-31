@@ -22,7 +22,7 @@ def login(usuario: SignIn):
     access_token = create_jwt_token(usuario_existente.email)
     
     return {
-      'username': usuario_existente.nome,
+      'username': usuario_existente.username,
       'access_token': access_token}
 
 @router.post('/auth/signup', status_code=status.HTTP_201_CREATED)
@@ -37,10 +37,10 @@ def signup(usuario: SignUp):
                         detail=f'Já existe um usuário com email {usuario.email}.')
 
   usuario.senha = hash_password(usuario.senha)
-  usuario_salvo = auth_dao.salvar(usuario)
+  usuario_salvo = auth_dao.criar_usuario(usuario)
   return usuario_salvo
 
-@router.post('/auth/senha_esquecida')
+@router.post('/auth/senhaesquecida')
 def esquecer_senha(email):
   usuario = auth_dao.buscar_usuario_por_email(email)
   if not usuario:

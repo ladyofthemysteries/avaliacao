@@ -1,5 +1,5 @@
 import sqlite3
-from modelos import SignUpUser, Usuario
+from modelos import SignUp, Usuario
 
 
 class AuthDAO():
@@ -41,7 +41,7 @@ class AuthDAO():
       return usuario
 
 
-  def criar_usuario(self, usuario: SignUpUser):
+  def criar_usuario(self, usuario: SignUp):
     with sqlite3.connect('usuario_tarefa.db') as conn:
       cursor = conn.cursor()
 
