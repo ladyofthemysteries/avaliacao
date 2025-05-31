@@ -6,6 +6,3 @@ app = FastAPI()
 
 app.include_router(roteador_auth)
 app.include_router(roteador_tarefas)
-
-if __name__ == '__main__':
-    main()
