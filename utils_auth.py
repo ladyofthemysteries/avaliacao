@@ -58,7 +58,7 @@ def create_jwt_token(email: str):
 
   return token
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/signin")
 
 auth_dao = AuthDAO()
 
