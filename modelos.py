@@ -9,30 +9,25 @@ class UsuarioBase(BaseModel):
   senha: str
 
 class Usuario(UsuarioBase):
-  id: int
+  id: int |  None = None
 
 # TOKEN
-class SignUpUser(UsuarioBase):
+class SignUp(UsuarioBase):
   pass
 
-class SignInUser(BaseModel):
+class SignIn(BaseModel):
   email: str
   senha: str
 
 # TAREFA
 class TarefaBase(BaseModel):
   titulo: str
-  descricao: Optional[str] = None
+  descricao: str | None = None
   concluida: bool = False
 
-class TarefaUpdate(BaseModel):
-    titulo: Optional[str]
-    descricao: Optional[str]
-    concluida: Optional[bool]
-
 class Tarefa(TarefaBase):
-  id: int 
-  usuario_id: int
+  id: int | None = None
+  usuario_id: int | None = None
 
 
 class TarefaCreate(TarefaBase):

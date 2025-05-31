@@ -7,30 +7,20 @@ class TarefaDAO:
     def __init__(self):
         pass
 
-    def todos(self):
+    def criar_tarefa(self, user:Usuario, tarefa: TarefaCreate):
         with sqlite3.connect('usuario_tarefa.db') as connection:
             cursor = connection.cursor()
-            select_query = 'SELECT * FROM Tarefa;'
-            cursor.execute(select_query)
-            tarefas_list = cursor.fetchall()
+            sql = 'INSERT INTO Tarefa(titulo,descricao,concluida,usuario_id) VALUES (?,?,?,?)'
+            cursor.execute(sql,(tarefa.titulo, tarefa.descricao, int(tarefa.concluida), user.id))
+            id = cursor.lastrowid
+            return Tarefa(id=id, usuario_id= user.id,**tarefa.dict())
 
-            tarefas: list[Tarefa] = []
-            for t in tarefas_list:
-                tarefa = Tarefa(
-                    id=t[0],
-                    titulo=t[1],
-                    descricao=t[2],
-                    concluida=bool(t[3]),
-                    usuario_id=t[4]
-                )
-                tarefas.append(tarefa)
-            return tarefas
-        
-    def todos_por_usuario(self, usuario: Usuario):
+
+    def listar_tarefas(self, usuario: Usuario):
         with sqlite3.connect('usuario_tarefa.db') as connection:
             cursor = connection.cursor()
-            select_query = 'SELECT * FROM Tarefa WHERE usuario_id = ?;'
-            cursor.execute(select_query, (usuario.id,))
+            query = 'SELECT * FROM Tarefa WHERE usuario_id = ?;'
+            cursor.execute(query, (usuario.id,))
             tarefas_list = cursor.fetchall()
             tarefas: list[Tarefa] = []
             for t in tarefas_list:
@@ -44,49 +34,36 @@ class TarefaDAO:
                 tarefas.append(tarefa)
             return tarefas
 
-    def obter_por_id(self, id: int):
+
+    def listar_tarefas_por_id(self, user: Usuario, id: int):
         with sqlite3.connect('usuario_tarefa.db') as connection:
             cursor = connection.cursor()
-            sql = 'SELECT * FROM Tarefa WHERE id = ?'
-            cursor.execute(sql, (id,))
-            result = cursor.fetchone()
-            if not result:
+            sql = 'SELECT * FROM Tarefa WHERE id = ? and usuario_id = ?'
+            cursor.execute(sql, (id, user.id))
+            resultado = cursor.fetchone()
+            if not resultado:
                 return None
             tarefa = Tarefa(
-                id=result[0],
-                titulo=result[1],
-                descricao=result[2],
-                concluida=bool(result[3]),
-                usuario_id=result[4]
+                id=resultado[0],
+                titulo=resultado[1],
+                descricao=resultado[2],
+                concluida=bool(resultado[3]),
+                usuario_id=resultado[4]
             )
             return tarefa
 
-    def remover_por_id(self, id: int):
+
+    def remover_por_id(self, id: int, user: Usuario):
         with sqlite3.connect('usuario_tarefa.db') as connection:
             cursor = connection.cursor()
-            sql = 'DELETE FROM Tarefa WHERE id = ?'
-            cursor.execute(sql, (id,))
+            sql = 'DELETE FROM Tarefa WHERE id = ? and usuario_id = ?'
+            cursor.execute(sql, (id, user.id))
             resultado = cursor.fetchone()
             if not resultado:
-                return 
+                return None 
 
-    def inserir(self, tarefa: TarefaCreate, usuario: Usuario):
-        with sqlite3.connect('usuario_tarefa.db') as connection:
-            cursor = connection.cursor()
-            sql = '''
-                INSERT INTO Tarefa(titulo, descricao, concluida, usuario_id)
-                VALUES (?, ?, ?, ?)
-            '''
-            cursor.execute(sql, (
-                tarefa.titulo,
-                tarefa.descricao,
-                int(tarefa.concluida),
-                usuario.id
-            ))
-            id = cursor.lastrowid
-            return Tarefa(id=id, **tarefa.dict())
 
-    def atualizar(self, id: int, tarefa: TarefaCreate, usuario: Usuario):
+    def atualizar_tarefa(self, id: int, tarefa: Tarefa, user: Usuario):
         with sqlite3.connect('usuario_tarefa.db') as connection:
             cursor = connection.cursor()
             sql = '''
@@ -99,5 +76,6 @@ class TarefaDAO:
                 tarefa.descricao,
                 int(tarefa.concluida),
                 id,
-                usuario.id
+                user.id
             ))
+            return Tarefa(id=id, usuario_id=user.id, **tarefa.dict())

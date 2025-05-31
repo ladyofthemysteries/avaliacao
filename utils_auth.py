@@ -4,7 +4,6 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 import jwt
 from passlib.context import CryptContext
-
 from repositorio_usuario import AuthDAO
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -17,34 +16,7 @@ def hash_password(senha: str):
 def verify_hash_password(senha: str, hash_password: str):
   return pwd_context.verify(senha, hash_password)
 
-
-
-def is_valid_password(senha: str):
-  '''
-    Tamanho mínimo: 8 caracteres
-    Conter números, letras minúsculas, 
-    maiúsculas, caracter especiais
-  '''
-  if len(senha) < 8:
-    return False
-
-  if not contem_numero(senha):
-    return False
-
-  return True
-
-
-def contem_numero(text: str):
-  numeros = '1234567890'
-
-  for caractere in text:
-    if caractere in numeros:
-      return True
-  
-  return False
-
-
-SECRET_KEY = "rogerio2025ifpi-tds"
+SECRET_KEY = "laisa"
 ALGORITHM = "HS256"
 
 def create_jwt_token(email: str):
@@ -57,6 +29,27 @@ def create_jwt_token(email: str):
   token = jwt.encode(data, SECRET_KEY, ALGORITHM)
 
   return token
+
+
+def is_valid_password(senha: str):
+  '''
+    Tamanho mínimo: 8 caracteres
+    Conter números, letras minúsculas, 
+    maiúsculas, caracter especiais
+  '''
+  if len(senha) < 8:
+    return False
+  if not contem_numero(senha):
+    return False
+  return True
+
+
+def contem_numero(text: str):
+  numeros = '1234567890'
+  for caractere in text:
+    if caractere in numeros:
+      return True
+  return False
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/signin")
 
