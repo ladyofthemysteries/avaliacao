@@ -1,0 +1,39 @@
+import sqlite3
+from modelos import SignUpUser, Usuario
+
+
+class AuthDAO():
+
+  def __init__(self):
+    pass
+
+
+  def buscar_usuario_por_email(self, email: str):
+    with sqlite3.connect('usuario_tarefa.db') as conn:
+      cursor = conn.cursor()
+      sql = 'SELECT * FROM Usuario where email = ?'
+      cursor.execute(sql, (email,))
+      result = cursor.fetchone()
+
+      if not result:
+        return None
+
+      usuario = Usuario(
+        id=result[0],  username=result[1], 
+        email=result[2],  password_hash=result[3], 
+      )
+
+      return usuario
+  
+  def salvar(self, usuario: SignUpUser):
+    with sqlite3.connect('usuario_tarefa.db') as conn:
+      cursor = conn.cursor()
+
+      sql = '''INSERT INTO Usuario(username, email, password_hash)
+              VALUES (?, ?, ? )'''
+      
+      cursor.execute(sql, (usuario.username,
+                usuario.email,
+                usuario.password_hash))
+      id = cursor.lastrowid
+      return Usuario(id=id, **usuario.dict())
