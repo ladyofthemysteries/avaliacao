@@ -14,13 +14,13 @@ def tarefas_create(nova_tarefa: TarefaCreate, user: Annotated[Usuario, Depends(g
     return tarefa
 
 @roteador_tarefas.get('/tarefas')
-def veiculos_list(user: Annotated[Usuario, Depends(get_current_user)]):
+def tarefas_list(user: Annotated[Usuario, Depends(get_current_user)]):
     tarefas = tarefas_dao.todos_por_usuario(user)
     return tarefas
 
 
 @roteador_tarefas.get('/tarefas/{id}')
-def tarefas_detail(id: int, user: Annotated[Usuario, Depends(get_current_user)]):
+def tarefas_detail(id: int, username: Annotated[Usuario, Depends(get_current_user)]):
    tarefa = tarefas_dao.obter_por_id(id)
    if tarefa:
     return tarefa
@@ -32,7 +32,8 @@ def tarefas_detail(id: int, user: Annotated[Usuario, Depends(get_current_user)])
   
 @roteador_tarefas.delete('/tarefas/{id}',status_code=status.HTTP_204_NO_CONTENT)
 def delete_tarefa(id:int, user: Annotated[Usuario, Depends(get_current_user)]):
-  if tarefas_detail(id):
+  tarefa = tarefas_dao.obter_por_id(id)
+  if tarefa:
     tarefas_dao.remover_por_id(id)
   else:
     raise HTTPException(

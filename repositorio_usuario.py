@@ -20,7 +20,7 @@ class AuthDAO():
 
       usuario = Usuario(
         id=result[0],  username=result[1], 
-        email=result[2],  password_hash=result[3], 
+        email=result[2],  senha=result[3], 
       )
 
       return usuario
@@ -29,11 +29,10 @@ class AuthDAO():
     with sqlite3.connect('usuario_tarefa.db') as conn:
       cursor = conn.cursor()
 
-      sql = '''INSERT INTO Usuario(username, email, password_hash)
+      sql = '''INSERT INTO Usuario(username, email, senha)
               VALUES (?, ?, ? )'''
       
-      cursor.execute(sql, (usuario.username,
-                usuario.email,
-                usuario.password_hash))
+      cursor.execute(sql, (usuario.username,usuario.email,
+                usuario.senha))
       id = cursor.lastrowid
       return Usuario(id=id, **usuario.dict())

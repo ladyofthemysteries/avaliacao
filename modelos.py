@@ -6,12 +6,10 @@ from typing import Optional
 class UsuarioBase(BaseModel):
   username: str
   email: str
-  password_hash: str
+  senha: str
 
 class Usuario(UsuarioBase):
   id: int
-
-
 
 # TOKEN
 class SignUpUser(UsuarioBase):
@@ -19,7 +17,7 @@ class SignUpUser(UsuarioBase):
 
 class SignInUser(BaseModel):
   email: str
-  password_hash: str
+  senha: str
 
 # TAREFA
 class TarefaBase(BaseModel):

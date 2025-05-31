@@ -9,26 +9,26 @@ from repositorio_usuario import AuthDAO
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def hash_password(password: str):
-  hash = pwd_context.hash(password)
+def hash_password(senha: str):
+  hash = pwd_context.hash(senha)
   return hash
 
 
-def verify_hash_password(password: str, hash_password: str):
-  return pwd_context.verify(password, hash_password)
+def verify_hash_password(senha: str, hash_password: str):
+  return pwd_context.verify(senha, hash_password)
 
 
 
-def is_valid_password(password: str):
+def is_valid_password(senha: str):
   '''
     Tamanho mínimo: 8 caracteres
     Conter números, letras minúsculas, 
     maiúsculas, caracter especiais
   '''
-  if len(password) < 8:
+  if len(senha) < 8:
     return False
 
-  if not contem_numero(password):
+  if not contem_numero(senha):
     return False
 
   return True

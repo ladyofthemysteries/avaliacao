@@ -17,7 +17,7 @@ def login(data: SignInUser):
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, 
                         detail=f'Email e/ou senha incorreto(s)!')
   
-  if not verify_hash_password(data.senha, usuario_existente.password_hash):
+  if not verify_hash_password(data.senha, usuario_existente.senha):
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f'Email e/ou senha incorreto(s)!')
   
   access_token = create_jwt_token(usuario_existente.email)
@@ -38,19 +38,27 @@ def signup(data: SignUpUser):
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, 
                         detail=f'Já existe um usuário com email {data.email}.')
 
-  data.password_hash= hash_password(data.password_hash)
+  data.senha = hash_password(data.senha)
   usuario = auth_dao.salvar(data)
 
   return usuario
 
 @router.post('/auth/forget-password')
-def forget_password():
-  ...
-
+def forget_password(email):
+  usuario = auth_dao.buscar_usuario_por_email(email)
+  if not usuario:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="E-mail não cadastrado."
+        )
+  reset_token = create_jwt_token(usuario.email, minutos_expiracao=5)
+  return {
+        "message": "Token de redefinição gerado. (simulado)",
+        "reset_token": reset_token}
 
 @router.get('/auth/me')
 def me(user: Annotated[Usuario, Depends(get_current_user)]):
   return {
-    'name': user.username,
+    'user': user.username,
     'email': user.email
   }
