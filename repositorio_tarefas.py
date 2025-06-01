@@ -16,11 +16,11 @@ class TarefaDAO:
             return Tarefa(id=id, usuario_id= user.id,**tarefa.dict())
 
 
-    def listar_tarefas(self, usuario: Usuario):
+    def listar_tarefas(self, user: Usuario):
         with sqlite3.connect('usuario_tarefa.db') as connection:
             cursor = connection.cursor()
-            query = 'SELECT * FROM Tarefa WHERE usuario_id = ?;'
-            cursor.execute(query, (usuario.id,))
+            query = 'SELECT * FROM Tarefa WHERE usuario_id =?;'
+            cursor.execute(query, (user.id,))
             tarefas_list = cursor.fetchall()
             tarefas: list[Tarefa] = []
             for t in tarefas_list:

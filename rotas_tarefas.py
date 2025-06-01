@@ -14,8 +14,8 @@ def criar_tarefas(nova_tarefa: TarefaCreate, user: Annotated[Usuario, Depends(ge
     return tarefa
 
 @roteador_tarefas.get('/listartarefas')
-def listar_tarefas(user: Annotated[Usuario, Depends(get_current_user)], id: int):
-    tarefas = tarefas_dao.listar_tarefas_por_id(user)
+def listar_tarefas(user: Annotated[Usuario, Depends(get_current_user)]):
+    tarefas = tarefas_dao.listar_tarefas(user)
     return tarefas
 
 
